@@ -1,4 +1,5 @@
 import express from "express";
+import { data, ReturnUsuario } from "./data";
 
 const app = express();
 const port = 3000;
@@ -82,6 +83,27 @@ app.post("/login", (req, res) => {
   }
   const dados = validarDados(body, dadosLogin);
   res.status(201).json(dados);
+});
+
+app.get("/user", (req, res) => {
+  res.status(200).json(data);
+});
+
+app.get("/user/:id", (req, res) => {
+  const findUser = data.find((user) => user.id === req.params.id);
+  if (!findUser) {
+    res.status(404).json({
+      erro: "Usuário não encontrado",
+    });
+  }
+  if (findUser) {
+    const returnUser: ReturnUsuario = {
+      email: findUser.email,
+      id: findUser.id,
+      username: findUser.username,
+    };
+    res.status(200).json(returnUser);
+  }
 });
 
 app.listen(port, () => {
